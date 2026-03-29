@@ -129,10 +129,10 @@
         
         /* CSS لتأثير الـ fade بشكل أسرع (0.6s) */
         .carousel-fade .carousel-item {
-            transition-duration: 0.6s; /* تم التعديل لزيادة السرعة */
+            transition-duration: 0.6s; 
         }
         .carousel-fade .carousel-item.active {
-            transition-duration: 0.6s; /* تم التعديل لزيادة السرعة */
+            transition-duration: 0.6s; 
         }
 
         /* تنسيقات قسم البوستات */
@@ -249,6 +249,7 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
+            cursor: pointer; /* أضفت مؤشر اليد ليعرف المستخدم أنه يمكن الضغط */
         }
 
         .footer-name-effect-container.show {
@@ -454,7 +455,7 @@
     </div>
 
     <audio id="backgroundMusic" loop>
-        <source src="https://raw.githubusercontent.com/khedmapodcast-cpu/mariamfawzy-id/refs/heads/main/%D8%A7%D9%86%D8%A7%20%D8%B4%D9%81%D8%AA%20%D9%85%D8%B9%D8%A7%D9%87%20%D8%A7%D9%84%D9%87%D9%86%D8%A7%20(%D9%8A%D8%A7%20%D8%B3%D8%B9%D8%AF%D9%8A%20%D9%88%D9%8A%D8%A7%20%D9%87%D9%86%D8%A7%D9%8A%D8%A7)%20%D9%86%D8%B3%D8%B1%D9%8A%D9%86%20%D8%A7%D9%8A%D9%85%D9%86%20-%20%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20%D8%AD%D9%85%D8%AF%D9%8A%D9%86%20Official%20Music%20Video%202026.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/khedmapodcast-cpu/mariamfawzy-id/refs/heads/main/%D8%A7%D9%86%D8%A7%20%D8%B4%D9%81%D8%AA%20%D9%85%D8%B9%D8%A7%D9%87%20%D8%A7%D9%84%D9%87%D9%86%D8%A7%20(%D9%8A%D8%A7%20%D8%B3%D8%B9%D8%AF%D9%8A%20%D9%88%D9%8A%D8%A7%20%D9%87%D9%86%D8%A7%20%D9%8A%D8%A7)%20%D9%86%D8%B3%D8%B1%D9%8A%D9%86%20%D8%A7%D9%8A%D9%85%D9%86%20-%20%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20%D8%AD%D9%85%D8%AF%D9%8A%D9%86%20Official%20Music%20Video%202026.mp3" type="audio/mpeg">
         المتصفح الخاص بك لا يدعم عنصر الصوت.
     </audio>
 
@@ -467,6 +468,19 @@
         <div class="name-hearts" id="nameHearts">I Love You</div>
         <span class="bottom-text">Sandy</span> 
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdV8vzGVyIx07Uq3pO98l31S3GcQkgUtf78fBrjWaEFiNnJMDgKg22SZ51SCNJdnoXHx_SEL0TNGhd5N1aMQFBdy0NPX4nZhHJqDWnjzJ8uW8K1uIt2al4lzCy8rGg0yPUbKUOg5OV3RNTTDjdD-L1LW7cBtBgyPNOp8TkAW9QSkjUduA2XGwSaAH0D2c/s320/IMG_%D9%A2%D9%A0%D9%A2%D9%A6%D9%A0%D9%A3%D9%A2%D9%A9_%D9%A0%D9%A6%D9%A2%D9%A0%D9%A3%D9%A0_488.jpg" alt="صورة بدون خلفية" class="floating-image" id="floatingImage">
+    </div>
+
+    <div class="modal fade" id="secretModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content" style="border-radius: 20px; border: 3px solid #dc3545;">
+                <div class="modal-header" style="background-color: #f8d7da;">
+                    <h5 class="modal-title" style="color: #dc3545; font-weight: 900;">رسائلي السرية لكِ ❤️</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="secretPostsContainer" style="background-color: #fff5f6;">
+                    </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -629,6 +643,52 @@
                 // إعادة تشغيل الـ autoplay بعد التمرير اليدوي
                 toggleAutoplay(); 
                 toggleAutoplay(); 
+            }
+        });
+
+        // --- الجزء الجديد: المفاجأة السرية عند الضغط المزدوج ---
+        const secretModal = new bootstrap.Modal(document.getElementById('secretModal'));
+        const secretPostsContainer = document.getElementById('secretPostsContainer');
+
+        const secretMessages = [
+            "أول مرة شوفتك فيها، عرفت إن حياتي هتتغير للأجمل ❤️",
+            "إنتي مش بس حبيبتي، إنتي الروح اللي بتنفس بيها يا ساندي.",
+            "لو لفيت الدنيا كلها، مش هلاقي حد في طيبة قلبك وحنيتك.",
+            "ضحكتك هي اللي بتديني الأمل إني أعيش كل يوم مبسوط.",
+            "بشكر ربنا كل يوم إنه رزقني بيكي وخلاكي من نصيبي.",
+            "إنتي أجمل ملكة شافت عيني، ومكيرتي اللي بفتخر بيها.",
+            "وقت ما بكون تعبان، مجرد ما بكلمك كل همي بيروح فجأة.",
+            "حبك في قلبي زي الورد اللي بيصغرش أبداً، بيكبر كل ثانية.",
+            "وعد مني ليكي، هفضل سندك وضهرك وأمانك لآخر يوم في عمري.",
+            "إنتي النور اللي نورلي طريقي وخلاني أحب الحياة بجد.",
+            "مقدرش أتخيل يومي من غير ما أسمع صوتك أو أشوف ضحكتك.",
+            "إنتي أغلى هدية جاتلي من السما، وهحافظ عليكي جوة عيني.",
+            "كل لحظة معاكي هي عيد بالنسبالي، يا أغلى من عمري.",
+            "عارفة؟ إنتي النفس اللي طالع وداخل مني، مالي عليا دنيتي.",
+            "بعشقك يا روح قلبي، وهفضل أحبك لآخر نفس فيا يا أميرتي."
+        ];
+
+        function generateSecretPosts() {
+            secretPostsContainer.innerHTML = ''; 
+            secretMessages.forEach((msg, index) => {
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.style.borderLeft = '5px solid #007bff'; 
+                card.innerHTML = `
+                    <h3 class="post-title" style="color: #007bff; border-bottom: 2px solid #cfe2ff;">رسالة حب رقم ${index + 1}</h3>
+                    <p class="post-content">${msg}</p>
+                `;
+                secretPostsContainer.appendChild(card);
+            });
+        }
+
+        footerNameEffect.addEventListener('dblclick', function() {
+            const password = prompt("أدخلي كلمة السر يا روحي:");
+            if (password === "بعشقك ياروح قلبي") {
+                generateSecretPosts();
+                secretModal.show();
+            } else if (password !== null) {
+                alert("كلمة السر غلط يا قمر.. حاولي تاني ❤️");
             }
         });
     </script>
