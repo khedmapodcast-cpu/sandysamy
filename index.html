@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض صور Bassem Kamal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <style>
+        /* التنسيقات العامة والـ Body */
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative; 
+            overflow-x: hidden;
+        }
+        
+        /* التنسيقات الجديدة لشريط الرأس */
+        .header-container {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            text-align: center; 
+        }
+        .header-title-wrapper {
+            flex-grow: 1; 
+            text-align: center; 
+        }
+        .header-title {
+            margin-bottom: 0;
+            color: #007bff; 
+            font-weight: 900; 
+            font-size: 1.8rem; 
+            display: inline-block; 
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* تنسيقات الأزرار في الهيدر */
+        .header-btn-group {
+            display: flex;
+            gap: 10px; 
+        }
+        .header-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        .header-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* تنسيقات أزرار التشغيل والموسيقى */
+        #autoplayToggle {
+            background-color: #007bff;
+            color: white;
+        }
+        #autoplayToggle.active {
+            background-color: #28a745;
+        }
+        #musicToggle {
+            background-color: #dc3545;
+            color: white;
+            animation: pulse 1.5s infinite; 
+        }
+        #musicToggle.active {
+            background-color: #17a2b8;
+            animation: none; 
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+
+
+        /* تنسيقات القلوب العائمة الصغيرة (Heart Particle) */
+        .heart-particle {
+            position: fixed;
+            font-size: 1.5rem;
+            opacity: 0.8; 
+            animation: floatUp 3s ease-out forwards;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+            bottom: 0; 
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-80vh) scale(1.2); 
+                opacity: 0;
+            }
+        }
+        
+        /* تنسيقات الـ Carousel */
+        .carousel-container {
+            max-width: 800px; 
+            margin: auto;
+            border: 5px solid #007bff; 
+            border-radius: 10px;
+            overflow: hidden; 
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            position: relative; 
+            margin-bottom: 40px;
+        }
+        .carousel-item img {
+            height: 450px; 
+            object-fit: cover; 
+        }
+        
+        /* CSS لتأثير الـ fade بشكل أسرع (0.6s) */
+        .carousel-fade .carousel-item {
+            transition-duration: 0.6s; /* تم التعديل لزيادة السرعة */
+        }
+        .carousel-fade .carousel-item.active {
+            transition-duration: 0.6s; /* تم التعديل لزيادة السرعة */
+        }
+
+        /* تنسيقات قسم البوستات */
+        .posts-section {
+            max-width: 700px; 
+            margin: 0 auto 50px auto; 
+            padding: 0 15px;
+        }
+
+        .post-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #dc3545; 
+            transition: transform 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc3545; 
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f8d7da; 
+            padding-bottom: 5px;
+        }
+
+        .post-content {
+            font-size: 1rem;
+            color: #495057; 
+            line-height: 1.8;
+            margin-bottom: 0;
+        }
+
+        .intro-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #dc3545;
+            font-weight: 900;
+            margin-bottom: 30px;
+        }
+
+        /* تنسيقات قلب Mariam الكبير */
+        .mariam-heart-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 999;
+            pointer-events: none;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-out;
+            opacity: 0;
+        }
+
+        .mariam-heart {
+            font-size: 8rem; 
+            color: rgba(220, 53, 69, 0.8); 
+            text-shadow: 0 0 20px rgba(255, 193, 203, 0.9); 
+            position: relative; 
+            display: inline-block; 
+        }
+
+        .mariam-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            font-size: 2rem;
+            color: #ffffff; 
+            font-weight: bold;
+            text-shadow: 0 0 5px #000000;
+            white-space: nowrap;
+        }
+
+        .show-mariam {
+            animation: showMariam 3s forwards;
+        }
+
+        @keyframes showMariam {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            10% {
+                transform: translate(-50%, -50%) scale(1.2); 
+                opacity: 1;
+            }
+            85% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* تنسيقات الاسم الذي يظهر في الأسفل (I Love You / Mariam) */
+        .footer-name-effect-container {
+            position: relative; 
+            margin: 50px auto; 
+            text-align: center;
+            max-width: fit-content; 
+            padding: 20px;
+            opacity: 0; 
+            transition: opacity 1s ease-in-out;
+            z-index: 10; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .footer-name-effect-container.show {
+            opacity: 1; 
+        }
+
+        /* تنسيق بناء الاسم بالقلوب (I Love You) */
+        .name-hearts {
+            font-size: 3rem; 
+            font-weight: 900;
+            color: transparent; 
+            -webkit-text-stroke: 1px #dc3545;
+            text-stroke: 1px #dc3545;
+            position: relative;
+            display: inline-block; 
+            letter-spacing: 5px;
+            margin-bottom: 10px; 
+        }
+
+        /* تأثير بناء الاسم (القلب الذي يملأ I Love You) */
+        .name-hearts::before {
+            content: "I Love You"; 
+            position: absolute;
+            top: 0;
+            right: 0; 
+            color: #dc3545; 
+            height: 100%;
+            width: 0; 
+            overflow: hidden;
+            white-space: nowrap;
+            transition: width 1.5s ease-out; 
+            direction: ltr; 
+        }
+
+        .footer-name-effect-container.show .name-hearts::before {
+            width: 100%; 
+        }
+
+        /* تنسيقات النص العادي تحت I Love You (Mariam) */
+        .bottom-text {
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            color: #007bff; 
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); 
+            margin-top: 5px; 
+            transform: translateY(20px); 
+            opacity: 0; 
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+        }
+        .footer-name-effect-container.show .bottom-text {
+            transform: translateY(0); 
+            opacity: 1; 
+        }
+
+        /* صورة بدون خلفية فوق الاسم */
+        .floating-image {
+            position: absolute;
+            width: 80px; 
+            height: 80px; 
+            object-fit: cover;
+            border-radius: 50%;
+            top: -20px; 
+            right: -20px; 
+            box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
+            transform: scale(0); 
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+        }
+
+        .footer-name-effect-container.show .floating-image {
+            transform: scale(1); 
+        }
+        
+        /* رسالة التنبيه للتشغيل */
+        .music-alert {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #dc3545;
+            animation: bounce-in 1s ease-out; 
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-container">
+            
+            <div class="header-btn-group">
+                <button id="musicToggle" class="header-btn" title="تشغيل / إيقاف الموسيقى">
+                    <i id="musicIcon" class="bi bi-music-note-beamed"></i>
+                </button>
+            </div>
+            
+            <div class="header-title-wrapper">
+                <h1 class="header-title">حبيبي انا</h1>
+            </div>
+
+            <div class="header-btn-group">
+                <button id="autoplayToggle" class="header-btn" title="تشغيل / إيقاف التلقائي">
+                    <i id="autoplayIcon" class="bi bi-play-fill"></i>
+                </button>
+            </div>
+        </header>
+
+        <p id="musicAlertMessage" class="music-alert">
+            <i class="bi bi-hand-index-thumb-fill"></i> لكي تبدأ الموسيقى وتظهر القلوب الملونة، يرجى الضغط على زر **المكبر الأحمر** أعلى الصفحة.
+        </p>
+        
+        <div class="carousel-container">
+            <div id="imageCarousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="false">
+                
+                <div class="carousel-indicators">
+                    <script>
+                        for (let i = 0; i < 20; i++) {
+                            document.write(`<button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="${i}" class="${i === 0 ? 'active' : ''}" aria-current="${i === 0 ? 'true' : 'false'}" aria-label="Slide ${i + 1}"></button>`);
+                        }
+                    </script>
+                </div>
+                
+                <div class="carousel-inner">
+                    <script>
+                        const imageLinks = [
+                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiIYNAPjm8WW58jGru2f4yZ-H0HfFwcdqY_LRY19E5POn8umpe0VDS0TD-6zahRmuEiFnfxQlH5D-nCeqNRDhDpnLHB7V4JbtT84rsmDhR-9xBWb3xcr8puHcreQ1PzKk6kgx9qb8SNoqvNiYgerjqFFkja_NmnbE6RLn7Wp0pFXK1SlzBDxZM3Ec4_dfAL/s320/%D8%AA%D8%B5%D9%85%D9%8As%D9%85%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%86%D9%88%D8%A7%D9%86.png',
+                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHaPpHqG7qDbqxIywdZX3OtsOQtVPvASnRCaHzhQmKlijZ-iKdxOzHJE9HFxX6OWQrS9mhRWCLqMbTdGNc2ecD8CKRslTkhku3aAbKIVL7b6AAukZZMXH91rydZn1bI3NLNj3KUUkkMLdQW_7TGQBza_m62L7sIWEvX1M-sdVTS2bFh2Kb9h5Lu-Mywo7q/s320/11.png',
+                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjl4oj-MaF9GLaiVRy8wPm_ti0rGmnRzK7iYMnDJsxW21hvhpZkUs_MjroP263Pu3c27md7cUwWOgkV3dL1aze2KIyS7dYyMEKestMXnGztayPuLEOBCVDNcxbDXiX80H2xz08ZYUseP8Pcds_vuh_TAtoYPAG1FEgrrpsY-EjYoMu9zONcnKWqAS3hWcVc/s320/12.png',
+                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEeWsR5hgIGCKOa_EkvM5trEx4-Z6WhgUOoBU4JPCqRMKj2-cxEQSEHWr2wERsKIYyFI5paJb6B77H0wwEPAIcVySqoTHGysT-KXwLMt3-GecDBUwuE8GKySYNTN4r64j3oyTHxgk1BRKu_FYPQBkaRoRitc7C3emmQoldDNvRf_w7RygDvXWjyjZrJQrH/s320/13.png',
+                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjp314sB-8chx0j0JsnI3MLU-rZklu5DjkWjrPn0MA6SuDn6GFhTgsQ2joqjDjjw2xjukuxIQt_a29OHkVDTrvv3MI1XVf2cuMVSG2veZ5iSBJS8R_5dBx8ULKg5nKcUUIzcMfVKee0uHu_XiRGCwQ4IxfkBOl5rP7ioBnbes69CTFf3z3XQaWsEKtLlJAQ/s320/14.png',
+                        ];
+
+                        imageLinks.forEach((link, index) => {
+                            const isActive = index === 0 ? ' active' : '';
+                            
+                            document.write(`
+                                <div class="carousel-item${isActive}">
+                                    <img src="${link}" class="d-block w-100" alt="صورة متنوعة رقم ${index + 1}">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>لقطة رائعة ${index + 1}</h5>
+                                        <p>استكشاف العالم من خلال هذه الصورة المتنوعة.</p>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">السابق</span>
+                </button>
+                
+                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">التالي</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="posts-section">
+            <h2 class="intro-title"><i class="bi bi-heart-fill"></i> جوة قلبي وجوة عيني</h2>
+
+            <div class="post-card">
+                <h3 class="post-title">عارف وانا معاك </h3>
+                <p class="post-content">
+                  وأنا معاك بحس إن الدنيا بتضحكلي، كأن كل التعب راح وكل حاجة بقت هادية فجأة ❤️
+ضحكتك بالنسبالي مش بس صوت، دي طاقة بتروّق قلبي وتخليني أحب الحياة أكتر 🌸
+إنتِ مش حبيبي وبس، إنتِ راحتي وسندي وضهري، والسبب اللي بيخليني أكمّل كل يوم وانا مبسوطة 🥰
+                </p>
+            </div>
+
+            <div class="post-card">
+                <h3 class="post-title">عارف انت بالنسبالي اية ؟</h3>
+                <p class="post-content">
+انت الأمان اللي بدور عليه من زمان، أول حد يفهمني من غير ما أتكلم.
+وجودك في حياتي مش صدفة… دي هدية من ربنا عشان يطمن قلبي بيك.
+انت مش بس حبيبت، انتي راحتي، وسندي، ونصي التاني اللي مكملني. 💞                </p>
+            </div>
+
+            <div class="post-card">
+                <h3 class="post-title">إنتِ ملكي أنا وبس</h3>
+                <p class="post-content">
+                    مش لأنّي بغيّرك عن الدنيا… لأ، لأن قلبي من يوم ما شافك وهو ماعرفش يحب غيرك.
+إنتِ مش مجرد حب، إنتِ الحكاية اللي كنت بدوّر عليها من زمان.
+وجودك معايا كفاية يخلّي الدنيا كلها تهون. 💫
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="https://raw.githubusercontent.com/khedmapodcast-cpu/mariamfawzy-id/refs/heads/main/%D8%A7%D9%86%D8%A7%20%D8%B4%D9%81%D8%AA%20%D9%85%D8%B9%D8%A7%D9%87%20%D8%A7%D9%84%D9%87%D9%86%D8%A7%20(%D9%8A%D8%A7%20%D8%B3%D8%B9%D8%AF%D9%8A%20%D9%88%D9%8A%D8%A7%20%D9%87%D9%86%D8%A7%D9%8A%D8%A7)%20%D9%86%D8%B3%D8%B1%D9%8A%D9%86%20%D8%A7%D9%8A%D9%85%D9%86%20-%20%D8%AA%D9%88%D8%B2%D9%8A%D8%B9%20%D8%AD%D9%85%D8%AF%D9%8A%D9%86%20Official%20Music%20Video%202026.mp3" type="audio/mpeg">
+        المتصفح الخاص بك لا يدعم عنصر الصوت.
+    </audio>
+
+    <div id="mariamHeartContainer" class="mariam-heart-container">
+        <span class="mariam-heart bi bi-heart-fill"></span>
+        <span class="mariam-name">Moreen</span>
+    </div>
+
+    <div id="footerNameEffect" class="footer-name-effect-container">
+        <div class="name-hearts" id="nameHearts">I Love You</div>
+        <span class="bottom-text">Moreen</span> 
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnCAat4X_QQOzN0wBMo8j5IEO9DX0DH-Wz1Nwu8qgQk2a84ni5Png8Q7luWRUN6FmSSRmIqPYmdlOvOxW07XTibBtbCU3VYAOuTTKyCy6tx38NC3iASDSaBOcuzoarNCjXWKLIkZ2GQouVL2WMt-r4SeXaCIDntgurgw0KOyHU5ANdDWZWiHHjNOPa96i8/s320/%D8%AA%D8%B5%D9%82%D8%AB%D9%82%D8%AB%D9%82%D8%AB%D9%82%D8%AB%D9%85%D9%8A%D9%85%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%86%D9%88%D8%A7%D9%86.png" alt="صورة بدون خلفية" class="floating-image" id="floatingImage">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        const carouselElement = document.getElementById('imageCarousel');
+        const carouselInstance = new bootstrap.Carousel(carouselElement, {
+            interval: 3000, 
+            wrap: true 
+        });
+        
+        const autoplayToggle = document.getElementById('autoplayToggle');
+        const autoplayIcon = document.getElementById('autoplayIcon');
+        let isAutoplayRunning = false;
+        let autoplayInterval;
+        
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicAlertMessage = document.getElementById('musicAlertMessage'); 
+        let isMusicPlaying = false;
+
+        const heartColors = ['#ff0077', '#ff4d4d', '#ff99dd', '#ffccff', '#ff00aa', '#ee82ee', '#ff6347', '#00ff7f', '#4682b4', '#ffa500'];
+        let heartInterval;
+        let mariamHeartInterval;
+        const mariamHeartContainer = document.getElementById('mariamHeartContainer');
+
+        const footerNameEffect = document.getElementById('footerNameEffect');
+        const nameHearts = document.getElementById('nameHearts');
+        let hasShownFooterEffect = false;
+
+
+        // ** وظيفة إنشاء القلوب المتحركة العادية **
+        function createHeartParticle() {
+            const heart = document.createElement('span');
+            heart.classList.add('heart-particle', 'bi', 'bi-heart-fill');
+            
+            const randomColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+            heart.style.color = randomColor;
+            
+            const randomLeft = Math.random() * window.innerWidth;
+            heart.style.left = `${randomLeft}px`; 
+
+
+            document.body.appendChild(heart);
+
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // ** وظيفة إظهار قلب Mariam الكبير **
+        function showMariamHeart() {
+            mariamHeartContainer.classList.add('show-mariam');
+            
+            setTimeout(() => {
+                mariamHeartContainer.classList.remove('show-mariam');
+            }, 3000); 
+        }
+
+        // ** وظيفة التحكم بالتشغيل التلقائي (الزر العائم) **
+        function toggleAutoplay() {
+            if (isAutoplayRunning) {
+                clearInterval(autoplayInterval);
+                autoplayIcon.className = 'bi bi-play-fill';
+                autoplayToggle.classList.remove('active');
+            } else {
+                autoplayIcon.className = 'bi bi-pause-fill';
+                autoplayToggle.classList.add('active');
+                
+                autoplayInterval = setInterval(() => {
+                    carouselInstance.next();
+                }, 3000); // 3 ثوانٍ
+            }
+            isAutoplayRunning = !isAutoplayRunning;
+        }
+
+        autoplayToggle.addEventListener('click', toggleAutoplay);
+
+        // ** وظيفة التحكم بالموسيقى **
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicIcon.className = 'bi bi-music-note-beamed';
+                musicToggle.classList.remove('active');
+                
+                musicToggle.style.animation = 'pulse 1.5s infinite';
+                musicAlertMessage.style.display = 'block';
+
+                clearInterval(heartInterval);
+                clearInterval(mariamHeartInterval);
+                mariamHeartContainer.classList.remove('show-mariam'); 
+                isMusicPlaying = false;
+                
+            } else {
+                backgroundMusic.play()
+                    .then(() => {
+                        musicIcon.className = 'bi bi-pause-fill';
+                        musicToggle.classList.add('active');
+                        musicToggle.style.animation = 'none'; 
+                        musicAlertMessage.style.display = 'none'; 
+
+                        isMusicPlaying = true;
+                        
+                        heartInterval = setInterval(createHeartParticle, 100);
+                        mariamHeartInterval = setInterval(showMariamHeart, 10000);
+                        showMariamHeart();
+                    })
+                    .catch(e => {
+                        console.error("فشل تشغيل الموسيقى. يجب على المستخدم أن يتفاعل أولاً (Autoplay Policy):", e);
+                    });
+            }
+        }
+
+        musicToggle.addEventListener('click', toggleMusic);
+
+        // ** وظيفة اكتشاف وصول المستخدم لأسفل الصفحة **
+        function checkScrollPosition() {
+            const totalHeight = document.documentElement.scrollHeight;
+            const viewportHeight = window.innerHeight;
+            const scrollPosition = window.scrollY;
+            
+            const nearBottom = (totalHeight - (scrollPosition + viewportHeight)) < 200;
+
+            if (nearBottom && !hasShownFooterEffect) {
+                footerNameEffect.classList.add('show');
+                hasShownFooterEffect = true; 
+            } else if (!nearBottom && hasShownFooterEffect) {
+                footerNameEffect.classList.remove('show');
+                hasShownFooterEffect = false;
+            }
+        }
+        
+        window.addEventListener('scroll', checkScrollPosition);
+        window.onload = checkScrollPosition;
+
+        // ** وظيفة التمرير باللمس (Swiping) **
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const minSwipeDistance = 50; 
+        
+        carouselElement.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            if (isAutoplayRunning) {
+                clearInterval(autoplayInterval);
+            }
+        });
+        
+        carouselElement.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            
+            if (touchEndX < touchStartX - minSwipeDistance) {
+                carouselInstance.next(); // تمرير لليسار (الصورة التالية)
+            }
+            else if (touchEndX > touchStartX + minSwipeDistance) {
+                carouselInstance.prev(); // تمرير لليمين (الصورة السابقة)
+            }
+
+            if (isAutoplayRunning) {
+                // إعادة تشغيل الـ autoplay بعد التمرير اليدوي
+                toggleAutoplay(); 
+                toggleAutoplay(); 
+            }
+        });
+    </script>
+</body>
+</html>
